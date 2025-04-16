@@ -1,4 +1,9 @@
-﻿@model List<Category>
+﻿@page
+@model Bulky_WebRazor_Temp.Pages.Categories.IndexModel
+
+@using Bulky_WebRazor_Temp.Models;
+
+
 <div class="container">
 	<div class="row pt-4 pb-4">
 
@@ -9,7 +14,7 @@
 		</div>
 	
 		<div class="col-6 text-end">
-			<a asp-controller="Category" asp-action="Create" class="btn btn-primary"> 
+			<a asp-page="/Categories/Create" class="btn btn-primary"> 
 				<i class="bi bi-plus-circle"></i> CREATE NEW CATEGORY
 			</a>
 		</div>
@@ -28,7 +33,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach(Category obj in Model.OrderBy(u=>u.DisplayOrder))
+		@foreach (Category obj in Model.CategoryList.OrderBy(u => u.DisplayOrder))
 		{
 			<tr>
 
@@ -38,11 +43,11 @@
 
 			<td>
 				<div class="w-75 btn-group" role="group">
-							<a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary rounded-1 mx-2">
+							<a asp-page="/Categories/Edit" asp-route-id="@obj.Id" class="btn btn-primary rounded-1 mx-2">
 								<i class="bi bi-pencil-fill"></i> Edit
 					</a>
 
-							<a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-dark rounded-1 mx-2">
+							<a asp-page="/Categories/Delete" asp-route-id="@obj.Id" class="btn btn-dark rounded-1 mx-2">
 								<i class="bi bi-trash2-fill"></i> Delete
 					</a>
 

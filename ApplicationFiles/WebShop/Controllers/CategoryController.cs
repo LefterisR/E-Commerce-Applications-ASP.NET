@@ -31,6 +31,7 @@ namespace WebShop.Controllers
             {
                 _db.Categories.Add(obj);
                 _db.SaveChanges();
+                TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -64,6 +65,7 @@ namespace WebShop.Controllers
             {
                 _db.Categories.Update(category);
                 _db.SaveChanges();
+                TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index", "Category");
             }
             return View(category);
@@ -97,6 +99,7 @@ namespace WebShop.Controllers
             }
 
             _db.Categories.Remove(categoryToRemove);
+            TempData["success"] = "Category deleted successfully";
             _db.SaveChanges();
            
             return RedirectToAction("Index", "Category");
