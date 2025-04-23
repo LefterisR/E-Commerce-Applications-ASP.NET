@@ -15,4 +15,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Bulky.Models\WebShop.Models.csproj" />
+    <ProjectReference Include="..\WebShop.DataAccess\WebShop.DataAccess.csproj" />
+    <ProjectReference Include="..\WebShop.Utility\WebShop.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

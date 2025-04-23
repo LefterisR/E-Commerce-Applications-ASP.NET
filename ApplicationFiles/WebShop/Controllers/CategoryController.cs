@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebShop.Data;
+using WebShop.DataAccess.Data;
 using WebShop.Models;
 
 namespace WebShop.Controllers
