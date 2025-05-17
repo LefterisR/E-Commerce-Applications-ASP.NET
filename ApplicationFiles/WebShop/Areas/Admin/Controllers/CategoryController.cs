@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebShop.DataAccess.Data;
+using WebShop.DataAccess.Repository.IRepository;
 using WebShop.Models;
 
-namespace WebShop.Controllers
+namespace WebShop.Areas.Admin.Controllers
 {
-    public class CategoryController(ApplicationDbContext db) : Controller
+    [Area("Admin")]
+    public class CategoryController : Controller
     {
-
-        private readonly ApplicationDbContext _db = db;
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.CategoryRepo.GetAll().ToList();
             return View(objCategoryList);
         }
 
@@ -25,12 +30,12 @@ namespace WebShop.Controllers
         {
             if (obj.Name == obj.DisplayOrder.ToString())
             {
-                ModelState.AddModelError("Name","The Display Order cannot be the same as the Name");
+                ModelState.AddModelError("Name", "The Display Order cannot be the same as the Name");
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepo.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index", "Category");
             }
@@ -39,23 +44,26 @@ namespace WebShop.Controllers
         }
 
 
-        public IActionResult Edit(int? id) {
+        public IActionResult Edit(int? id)
+        {
 
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            
-            Category? categoryFromDb = _db.Categories.Find(id);
-           
-            if (categoryFromDb == null) { 
+
+            Category? categoryFromDb = _unitOfWork.CategoryRepo.GetFirstOrDefault(u => u.Id == id);
+
+            if (categoryFromDb == null)
+            {
                 return NotFound();
             }
 
             return View(categoryFromDb);
         }
         [HttpPost]
-        public IActionResult Edit(Category category) {
+        public IActionResult Edit(Category category)
+        {
 
             if (category.Name == category.DisplayOrder.ToString())
             {
@@ -63,8 +71,8 @@ namespace WebShop.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(category);
-                _db.SaveChanges();
+                _unitOfWork.CategoryRepo.Update(category);
+                _unitOfWork.Save();
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction("Index", "Category");
             }
@@ -79,7 +87,7 @@ namespace WebShop.Controllers
                 return NotFound();
             }
 
-            Category? categoryFromDb = _db.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.CategoryRepo.GetFirstOrDefault(u => u.Id == id);
 
             if (categoryFromDb == null)
             {
@@ -89,19 +97,20 @@ namespace WebShop.Controllers
             return View(categoryFromDb);
         }
 
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
-        {   
-            Category? categoryToRemove = _db.Categories.Find(id);
+        {
+            Category? categoryToRemove = _unitOfWork.CategoryRepo.GetFirstOrDefault(u => u.Id == id);
 
-            if (categoryToRemove == null) {
+            if (categoryToRemove == null)
+            {
                 return NotFound();
             }
 
-            _db.Categories.Remove(categoryToRemove);
+            _unitOfWork.CategoryRepo.Remove(categoryToRemove);
             TempData["success"] = "Category deleted successfully";
-            _db.SaveChanges();
-           
+            _unitOfWork.Save();
+
             return RedirectToAction("Index", "Category");
         }
     }
