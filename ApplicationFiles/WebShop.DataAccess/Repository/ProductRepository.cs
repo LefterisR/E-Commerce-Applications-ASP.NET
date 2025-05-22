@@ -20,7 +20,23 @@ namespace WebShop.DataAccess.Repository
 
         public void Update(Product objProduct)
         {
-            _db.Products.Update(objProduct);
+            var objFromDb = _db.Products.FirstOrDefault(p=>p.Id == objProduct.Id);
+            if (objFromDb != null) 
+            {
+                objFromDb.Title = objProduct.Title;
+                objFromDb.ISBN = objProduct.ISBN;
+                objFromDb.Price = objProduct.Price;
+                objFromDb.Price50 = objProduct.Price50;
+                objFromDb.Price100 = objProduct.Price100;
+                objFromDb.ListPrice = objProduct.ListPrice;
+                objFromDb.Author = objProduct.Author;
+                objFromDb.Description = objProduct.Description;
+                objFromDb.CategoryId = objProduct.CategoryId;
+                if (objProduct.ImageUrl != null) 
+                {
+                    objFromDb.ImageUrl = objProduct.ImageUrl;
+                }
+            }
         }
     }
 }
