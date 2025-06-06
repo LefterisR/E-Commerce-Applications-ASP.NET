@@ -1,0 +1,1 @@
+### Version Control repo for the course: "Build real world e-commerce application using ASP.NET Core MVC, Entity Framework Core and ASP.NET Core Identity" by Bhrugen Patel [site](https://www.dotnetmastery.com/)
