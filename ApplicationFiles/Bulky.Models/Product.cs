@@ -49,6 +49,9 @@ namespace WebShop.Models
         [ValidateNever]
         public Category Category { get; set; } //Navigation Property
         [ValidateNever]
+
+        [Required(ErrorMessage = "Image URL cannot be an empty field. Please provide a valid image URL.")]
+        [DataType(DataType.Upload)]
         public string ImageUrl { get; set; }
     }
 }

@@ -1,0 +1,102 @@
+﻿@model Product
+
+<form method="post">
+    <div class="card shadow border-0 mt-4 mb-4">
+        <div class="card-header bg-primary text-light py-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="text-uppercase">@Model.Title</h3>
+                    <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="py-3">
+                <div class="row">
+                    <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                        <a asp-controller="Home" asp-action="Index" asp-area="Customer" class="btn btn-primary btn-sm text-uppercase">
+                            <small>Back to Home</small>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                        <img src="@Model.ImageUrl" width="100%" class="rounded border shadow-sm" />
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-1">
+                        <div class="col-12 col-md-6 pb-4">
+                            <span class="badge bg-success text-uppercase">@Model.Category.Name</span>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-muted">ISBN: <span class="fw-normal">@Model.ISBN</span></h6>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-muted pb-2">
+                                List Price:
+                                <span class="text-decoration-line-through text-danger">@Model.ListPrice.ToString("c")</span>
+                            </h6>
+                        </div>
+
+                        <!-- Price Table -->
+                        <div class="row text-center ps-2">
+                            <div class="p-1 col-3 col-lg-2 border-bottom text-secondary fw-semibold">
+                                Quantity
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 border-bottom text-secondary fw-semibold">
+                                1–50
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 border-bottom text-secondary fw-semibold">
+                                51–100
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 border-bottom text-secondary fw-semibold">
+                                100+
+                            </div>
+                        </div>
+                        <div class="row text-center ps-2 mb-3">
+                            <div class="p-1 col-3 col-lg-2 bg-light text-success fw-bold">
+								Price
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 bg-light text-success fw-bold">
+                                @Model.Price.ToString("c")
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 bg-light text-success fw-bold">
+                                @Model.Price50.ToString("c")
+                            </div>
+                            <div class="p-1 col-3 col-lg-2 bg-light text-success fw-bold">
+                                @Model.Price100.ToString("c")
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="row ps-2 my-2">
+                            <p class="text-muted small lh-sm">@Model.Description</p>
+                        </div>
+
+                        <!-- Quantity Input -->
+                        <div class="row ps-2 mb-3">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold">
+                                        Count
+                                    </span>
+                                    <input type="number" value="1" class="form-control text-end"
+                                           aria-label="Product Quantity" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        <div class="row">
+                            <div class="col-12 col-md-6 pb-1">
+                                <button type="submit" disabled
+                                        class="btn btn-success w-100 py-2 text-uppercase fw-semibold">
+                                    Add to Cart (Coming Soon...)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

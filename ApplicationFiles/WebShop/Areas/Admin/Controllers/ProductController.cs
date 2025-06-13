@@ -59,10 +59,25 @@ namespace WebShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+                if (file == null && string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                {
+                    ModelState.AddModelError("Product.ImageUrl", "Please upload an image.");
+                    
+                    productVM.CategoryList = _unitOfWork.CategoryRepo.GetAll().Select(x => new SelectListItem
+                    {
+                        Text = x.Name,
+                        Value = x.Id.ToString()
+                    });
+
+                    return View(productVM);
+                }
+
                 if (file != null) 
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
+
 
                     if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
@@ -111,41 +126,41 @@ namespace WebShop.Areas.Admin.Controllers
         }
 
         
+        //OLD delete functionallity
+        //public IActionResult Delete(int? id)
+        //{
 
-        public IActionResult Delete(int? id)
-        {
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+        //    Product? productFromDb = _unitOfWork.ProductRepo.GetFirstOrDefault(p => p.Id == id);
 
-            Product? productFromDb = _unitOfWork.ProductRepo.GetFirstOrDefault(p => p.Id == id);
+        //    if (productFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
+        //    return View(productFromDb);
+        //}
 
-            return View(productFromDb);
-        }
+        //[HttpPost, ActionName("Delete")]
+        //public IActionResult DeletePOST(int? id)
+        //{
+        //    Product? productToRemove = _unitOfWork.ProductRepo.GetFirstOrDefault(p => p.Id == id);
 
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
-            Product? productToRemove = _unitOfWork.ProductRepo.GetFirstOrDefault(p => p.Id == id);
+        //    if (productToRemove == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (productToRemove == null)
-            {
-                return NotFound();
-            }
+        //    _unitOfWork.ProductRepo.Remove(productToRemove);
+        //    TempData["success"] = "Product deleted successfully";
+        //    _unitOfWork.Save();
 
-            _unitOfWork.ProductRepo.Remove(productToRemove);
-            TempData["success"] = "Product deleted successfully";
-            _unitOfWork.Save();
-
-            return RedirectToAction("Index", "Product");
-        }
+        //    return RedirectToAction("Index", "Product");
+        //}
 
         #region API Calls
 
@@ -155,7 +170,30 @@ namespace WebShop.Areas.Admin.Controllers
             List<Product> objProductList = _unitOfWork.ProductRepo.GetAll(includeProperties: "Category").ToList();
             return Json(new { data = objProductList });
         }
-        #region
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var productToRemove = _unitOfWork.ProductRepo.GetFirstOrDefault(p => p.Id == id);
+            
+            if(productToRemove == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToRemove.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.ProductRepo.Remove(productToRemove);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Deleted Successfully" });
+        }
+        #endregion
 
     }
 
